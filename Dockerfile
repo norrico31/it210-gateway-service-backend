@@ -1,20 +1,26 @@
-FROM golang:1.23 AS builder
+FROM golang:1.23-alpine AS builder
 
-WORKDIR /app
+WORKDIR /app/gateway/
+
+RUN apk add --no-cache git
 
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . ./
+COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/main cmd/main.go
+RUN go mod tidy
 
-FROM alpine:3.18
+RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/main.go
 
-RUN apk --no-cache add ca-certificates
+FROM alpine:latest
 
-WORKDIR /
+RUN apk add --no-cache nginx libc6-compat
 
-COPY --from=builder /app/main /main
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-CMD ["/main"]
+COPY --from=builder /app/gateway/main /main
+
+EXPOSE 80 8080
+
+CMD ["sh", "-c", "nginx && /main"]

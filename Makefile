@@ -1,10 +1,11 @@
-.PHONY: build run seed-all
-
 build:
 	@docker-compose build
 
-run:
-	@docker-compose up
+run-dev:
+	@go run ./cmd
+
+run-docker-up:
+	@docker-compose up -d --build
 
 down:
-	@docker-compose down
+	@docker-compose down -v
