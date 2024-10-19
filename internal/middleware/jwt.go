@@ -10,7 +10,7 @@ import (
 
 const BEARER = "Bearer "
 
-func ValidateJWT(n http.Handler) http.Handler {
+func ValidateJWT(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" || !strings.HasPrefix(authHeader, BEARER) {
@@ -33,6 +33,6 @@ func ValidateJWT(n http.Handler) http.Handler {
 			return
 		}
 
-		n.ServeHTTP(w, r)
+		h.ServeHTTP(w, r)
 	})
 }
