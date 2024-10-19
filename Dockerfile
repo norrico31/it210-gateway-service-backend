@@ -23,4 +23,4 @@ COPY --from=builder /app/gateway/main /main
 
 EXPOSE 80 8080
 
-CMD ["sh", "-c", "nginx && /main"]
+CMD ["sh", "-c", "nginx -g 'daemon off;' & /main"]

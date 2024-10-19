@@ -14,17 +14,26 @@ func NewServeMux() *ServeMux {
 	return &ServeMux{mux: http.NewServeMux()}
 }
 
-func (c *ServeMux) HandleFunc(p string, h http.Handler) {
-	c.mux.Handle(p, c.logRequest(h))
+func (c *ServeMux) HandleFunc(p string, h http.Handler, methods ...string) {
+	c.mux.Handle(p, c.logRequest(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		h.ServeHTTP(w, r)
+		// for _, method := range methods {
+		// 	if r.Method == method {
+		// 		return
+		// 	}
+		// }
+		// http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	})))
 }
 
 func (c *ServeMux) logRequest(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		s := time.Now()
+		start := time.Now()
 
-		log.Printf("%s %s%s in %s", r.Method, r.Host, r.URL, time.Since(s))
+		// Log request details
+		log.Printf("%s %s %s in %s", r.Method, r.RequestURI, r.Proto, time.Since(start))
 
-		h.ServeHTTP(w, r)
+		h.ServeHTTP(w, r) // Call the next handler
 	})
 }
 

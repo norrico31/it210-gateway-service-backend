@@ -13,14 +13,21 @@ import (
 func main() {
 	router := middleware.NewServeMux()
 
+	// Create a reverse proxy handler for the auth service
+	authHandler := proxy.ReverseProxy("8081")
+
 	// PUBLIC ROUTES
-	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath), proxy.ReverseProxy("8081"))
-	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/helloworld"), proxy.ReverseProxy("8081"))
-	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/helloworld"), proxy.ReverseProxy("8082"))
+	// Use the correct HTTP method
+	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath), authHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/helloworld"), authHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
 
 	// AUTH ROUTES
-	router.HandleFunc("/api/v1/", middleware.ValidateJWT(proxy.ReverseProxy("8081")))
+	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), middleware.ValidateJWT(authHandler))
 
+	// Add more routes as needed
 	log.Println("Gateway is running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	if err := http.ListenAndServe(":8080", router); err != nil {
+		log.Fatalf("could not start server: %v", err)
+	}
 }
