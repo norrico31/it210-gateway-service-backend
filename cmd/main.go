@@ -16,15 +16,19 @@ func main() {
 	// Create a reverse proxy handler for the auth service
 	authHandler := proxy.ReverseProxy("8081")
 
+	coreHandler := proxy.ReverseProxy("8082")
+
 	// PUBLIC ROUTES
-	// Use the correct HTTP method
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath), authHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/helloworld"), authHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/helloworld"), coreHandler)
 
 	// AUTH ROUTES
 	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), middleware.ValidateJWT(authHandler))
 
+	// CORE ROUTES
+	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
 	// Add more routes as needed
 	log.Println("Gateway is running on port 8080")
 	if err := http.ListenAndServe(":8080", router); err != nil {

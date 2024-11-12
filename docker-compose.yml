@@ -10,6 +10,6 @@ services:
     networks:
       - it210-network
 
-networks:
-  it210-network:
-    external: true
+# networks:
+#   it210-network:
+#     external: true
