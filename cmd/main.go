@@ -19,10 +19,12 @@ func main() {
 	coreHandler := proxy.ReverseProxy("8082")
 
 	// PUBLIC ROUTES
-	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath), authHandler)
-	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/helloworld"), authHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
-	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/helloworld"), coreHandler)
+
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/roles"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/roles/{roleId}"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/roles/{roleId}/restore"), coreHandler)
 
 	// AUTH ROUTES
 	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), middleware.ValidateJWT(authHandler))

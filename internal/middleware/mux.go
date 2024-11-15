@@ -17,12 +17,6 @@ func NewServeMux() *ServeMux {
 func (c *ServeMux) HandleFunc(p string, h http.Handler, methods ...string) {
 	c.mux.Handle(p, c.logRequest(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.ServeHTTP(w, r)
-		// for _, method := range methods {
-		// 	if r.Method == method {
-		// 		return
-		// 	}
-		// }
-		// http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	})))
 }
 

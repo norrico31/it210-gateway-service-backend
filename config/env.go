@@ -23,7 +23,7 @@ func initConfig() Config {
 	return Config{
 		BaseURL:     getEnv("BASE_URL", "http://127.0.0.1"),
 		AppVersion1: getEnv("APP_VERSION_1", "v1"),
-		AuthPath:    getEnv("AUTH_PATH", "users"),
+		AuthPath:    getEnv("AUTH_PATH", "auth"),
 		CorePath:    getEnv("CORE_PATH", "core"),
 		AuthPort:    getEnv("AUTH_PORT", "8081"),
 		CorePort:    getEnv("CORE_PORT", "8082"),
