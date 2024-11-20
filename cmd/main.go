@@ -22,10 +22,23 @@ func main() {
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
 
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users/deleted"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users/{userId}"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users/{userId}/restore"), coreHandler)
+
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/roles"), coreHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/roles/{roleId}"), coreHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/roles/{roleId}/restore"), coreHandler)
 
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/projects"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/projects/deleted"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/projects/{projectId}"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/projects/{projectId}/restore"), coreHandler)
+
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/tasks"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/tasks/deleted"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/tasks/{taskId}"), coreHandler)
+	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/tasks/{taskId}/restore"), coreHandler)
 	// AUTH ROUTES
 	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), middleware.ValidateJWT(authHandler))
 
