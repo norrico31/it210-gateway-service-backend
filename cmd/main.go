@@ -16,7 +16,7 @@ func main() {
 	// Create a reverse proxy handler for the auth service
 	authHandler := proxy.ReverseProxy("8081")
 
-	coreHandler := proxy.ReverseProxy("8082")
+	coreHandler := proxy.ReverseProxy("8080")
 
 	// PUBLIC ROUTES
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
@@ -39,14 +39,16 @@ func main() {
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/tasks/deleted"), coreHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/tasks/{taskId}"), coreHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/tasks/{taskId}/restore"), coreHandler)
+
 	// AUTH ROUTES
 	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), middleware.ValidateJWT(authHandler))
 
 	// CORE ROUTES
 	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
 	// Add more routes as needed
-	log.Println("Gateway is running on port 8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
+
+	log.Println("Gateway is running on port 8083")
+	if err := http.ListenAndServe(":8083", router); err != nil {
 		log.Fatalf("could not start server: %v", err)
 	}
 }

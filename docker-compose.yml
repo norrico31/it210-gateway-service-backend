@@ -6,10 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80"  # Map container's port 80 to host's port 8080
+      - "8083:83"
     networks:
       - it210-network
-
-# networks:
-#   it210-network:
-#     external: true

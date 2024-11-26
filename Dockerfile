@@ -21,6 +21,6 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=builder /app/gateway/main /main
 
-EXPOSE 80 8080
+EXPOSE 83 8083
 
 CMD ["sh", "-c", "nginx -g 'daemon off;' & /main"]
