@@ -1,14 +1,12 @@
 package proxy
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 )
 
-func ReverseProxy(port, baseURL string) http.Handler {
-	target := fmt.Sprintf("%s:%s", baseURL, port)
-	proxyURL, _ := url.Parse(target)
+func ReverseProxy(baseURL string) http.Handler {
+	proxyURL, _ := url.Parse(baseURL) // Only pass the base URL
 	return httputil.NewSingleHostReverseProxy(proxyURL)
 }
