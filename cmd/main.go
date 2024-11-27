@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/norrico31/it210-gateway-service-backend/config"
 	"github.com/norrico31/it210-gateway-service-backend/internal/middleware"
 	"github.com/norrico31/it210-gateway-service-backend/internal/proxy"
@@ -50,8 +51,14 @@ func main() {
 	// router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
 	// Add more routes as needed
 
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}),                                       // Allow all origins, or specify specific domains here
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}), // Allow specific methods
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),           // Allow specific headers
+	)(router)
+
 	log.Println("Gateway is running on port 8083")
-	if err := http.ListenAndServe(":8083", router); err != nil {
+	if err := http.ListenAndServe(":8083", corsHandler); err != nil {
 		log.Fatalf("could not start server: %v", err)
 	}
 }
