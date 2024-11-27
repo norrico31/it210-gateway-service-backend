@@ -57,8 +57,14 @@ func main() {
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),           // Allow specific headers
 	)(router)
 
+	server := &http.Server{
+		Addr:           ":8083",
+		Handler:        corsHandler,
+		MaxHeaderBytes: 1 << 20, // 1 MB for header size, adjust as needed
+	}
+
 	log.Println("Gateway is running on port 8083")
-	if err := http.ListenAndServe(":8083", corsHandler); err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("could not start server: %v", err)
 	}
 }
