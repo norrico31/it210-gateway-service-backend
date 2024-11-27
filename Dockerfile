@@ -26,6 +26,6 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 # Copy the built application from the builder stage
 COPY --from=builder /app/main /main
 
-EXPOSE 83 8083
+EXPOSE 80 8083
 
 CMD ["sh", "-c", "nginx -g 'daemon off;' & /main"]
