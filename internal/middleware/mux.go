@@ -24,10 +24,13 @@ func (c *ServeMux) logRequest(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
-		// Log request details
-		log.Printf("%s %s %s in %s", r.Method, r.RequestURI, r.Proto, time.Since(start))
+		// Log the incoming request URL
+		log.Printf("Request: %s %s", r.Method, r.RequestURI)
 
 		h.ServeHTTP(w, r) // Call the next handler
+
+		// Log how long the request took
+		log.Printf("Handled: %s %s in %s", r.Method, r.RequestURI, time.Since(start))
 	})
 }
 
