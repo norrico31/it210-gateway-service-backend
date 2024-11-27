@@ -15,23 +15,19 @@ func ReverseProxy(baseURL string) http.Handler {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Log the incoming request URL and method
 		log.Printf("Incoming request: %s %s", r.Method, r.RequestURI)
 
-		// Define the prefix to ensure is included in the forwarded request
+		// Strip the /api/v1 prefix if it exists
 		prefix := "/api/v1"
-
-		// Ensure the prefix is included in the URL path if missing
-		if !strings.HasPrefix(r.URL.Path, prefix) {
-			r.URL.Path = prefix + r.URL.Path
-			log.Printf("Added prefix, new path: %s", r.URL.Path)
+		if strings.HasPrefix(r.URL.Path, prefix) {
+			r.URL.Path = r.URL.Path[len(prefix):]
+			log.Printf("Stripped prefix, new path: %s", r.URL.Path)
 		}
 
 		// Log the full URL to which the proxy is forwarding
 		fullURL := proxyURL.ResolveReference(r.URL)
 		log.Printf("Forwarding to: %s", fullURL.String())
 
-		// Forward the request to the target URL using the reverse proxy
 		httputil.NewSingleHostReverseProxy(proxyURL).ServeHTTP(w, r)
 	})
 }
