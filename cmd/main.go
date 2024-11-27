@@ -14,9 +14,9 @@ func main() {
 	router := middleware.NewServeMux()
 
 	// Create a reverse proxy handler for the auth service
-	authHandler := proxy.ReverseProxy("8081")
+	authHandler := proxy.ReverseProxy("8081", config.Envs.AuthURL)
 
-	coreHandler := proxy.ReverseProxy("8080")
+	coreHandler := proxy.ReverseProxy("8080", config.Envs.CoreURL)
 
 	// PUBLIC ROUTES
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)

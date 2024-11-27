@@ -7,6 +7,6 @@ import (
 )
 
 func HandlePathV1(p string) string {
-	path := fmt.Sprintf(`/api/%s/%s`, config.Envs.AppVersion1, p)
+	path := fmt.Sprintf(`/api/%s/%s`, config.Envs.AppVersion, p)
 	return path
 }

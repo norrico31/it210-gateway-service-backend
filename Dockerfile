@@ -1,9 +1,10 @@
 FROM golang:1.23-alpine AS builder
 
-WORKDIR /app/gateway/
+WORKDIR /app
 
 RUN apk add --no-cache git
 
+# Copy dependency files
 COPY go.mod go.sum ./
 RUN go mod download
 
@@ -11,15 +12,19 @@ COPY . .
 
 RUN go mod tidy
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/main.go
+# Build the Go application binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main ./cmd/main.go
 
+# Final production image with Nginx
 FROM alpine:latest
 
+# Install Nginx and necessary libraries
 RUN apk add --no-cache nginx libc6-compat
 
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=builder /app/gateway/main /main
+# Copy the built application from the builder stage
+COPY --from=builder /app/main /main
 
 EXPOSE 83 8083
 
