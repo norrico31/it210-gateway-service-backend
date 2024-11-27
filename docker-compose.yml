@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  gateway:
+    build:
+      context: .  # Build the Go application from the current directory
+      dockerfile: Dockerfile  # Use your existing Dockerfile
+    ports:
+      - "8083:8084"  # Expose the Go application on port 8084
+    depends_on:
+      - nginx  # Ensure Nginx starts before the Go application
+
+  nginx:
+    image: nginx:alpine  # Use Nginx's official Alpine image
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Mount your custom nginx.conf
+    ports:
+      - "83:83"  # Expose Nginx on port 83 (for reverse proxy)
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
