@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -19,6 +20,7 @@ func main() {
 	coreHandler := proxy.ReverseProxy(config.Envs.CoreURL)
 
 	// PUBLIC ROUTES
+	http.HandleFunc("/api/v1/helloworld", helloWorldHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
 
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users"), coreHandler)
@@ -51,4 +53,9 @@ func main() {
 	if err := http.ListenAndServe(":8083", router); err != nil {
 		log.Fatalf("could not start server: %v", err)
 	}
+}
+
+func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "Hello, World! Gateway is working.")
 }
