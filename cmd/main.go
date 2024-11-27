@@ -20,8 +20,9 @@ func main() {
 	coreHandler := proxy.ReverseProxy(config.Envs.CoreURL)
 
 	// PUBLIC ROUTES
-	http.HandleFunc("/api/v1/helloworld", helloWorldHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.AuthPath+"/login"), authHandler)
+
+	router.HandleFunc("/api/v1/helloworld", http.HandlerFunc(helloWorldHandler), "GET")
 
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users"), coreHandler)
 	router.HandleFunc(utils.HandlePathV1(config.Envs.CorePath+"/users/deleted"), coreHandler)
